@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  streamlit:
+    build:
+      context: ./request_historico_preco
+      dockerfile: Dockerfile.streamlit
+    container_name: streamlit-container
+    ports:
+      - "8501:8501"
+    networks:
+      - minha-rede
+
+  api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.api
+    container_name: api-container
+    ports:
+      - "8000:8000"
+    networks:
+      - minha-rede
+
+networks:
+  minha-rede:
+    driver: bridge
