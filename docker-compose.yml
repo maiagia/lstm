@@ -2,7 +2,7 @@ version: "3.9"
 services:
   streamlit:
     build:
-      context: ./request_historico_preco
+      context: ./app
       dockerfile: Dockerfile.streamlit
     container_name: streamlit-container
     ports:
@@ -12,7 +12,7 @@ services:
 
   api:
     build:
-      context: ./app
+      context: ./api
       dockerfile: Dockerfile.api
     container_name: api-container
     ports:

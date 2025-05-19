@@ -27,7 +27,8 @@ data_inicio = st.date_input("Data de início:", value=um_ano_atras)
 data_fim = st.date_input("Data de fim:", value=hoje)
 
 def consultar_historico(acoes, data_inicio, data_fim):
-    vEndPoint = 'http://localhost:8000/api/historico_preco'
+    # vEndPoint = 'http://localhost:8000/api/historico_preco'
+    vEndPoint = 'http://api:8000/api/historico_preco'
     vBase = pd.DataFrame()
 
     for acao in acoes:
