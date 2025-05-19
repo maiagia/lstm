@@ -1,8 +1,7 @@
 import requests
 import pandas as pd
 import streamlit as st
-from datetime import datetime
-
+from datetime import datetime, timedelta
 # Configuração da interface com Streamlit
 st.title("TechChallenge - Fase 04")
 st.write("Este aplicativo permite consultar o histórico de preços de ações da B3.")
@@ -12,18 +11,22 @@ st.write("**Membros do projeto:** Kleryton de Souza, Lucas Paim, Maiara Giavoni,
 acoes = st.multiselect(
     "Selecione as ações:",
     options=[
-        'PETR4.SA', 'VALE3.SA', 'ITUB4.SA', 'BBAS3.SA', 'BBDC4.SA', 
-        'ABEV3.SA', 'MGLU3.SA', 'WEGE3.SA', 'RENT3.SA', 'B3SA3.SA'
+        'PETR4.SA', 
+        # 'VALE3.SA', 'ITUB4.SA', 'BBAS3.SA', 'BBDC4.SA', 
+        # 'ABEV3.SA', 'MGLU3.SA', 'WEGE3.SA', 'RENT3.SA', 'B3SA3.SA'
     ],
     default=['PETR4.SA']
 )
 
-data_inicio = st.date_input("Data de início:", value=datetime(2025, 1, 6))
-data_fim = st.date_input("Data de fim:", value=datetime(2025, 1, 10))
+hoje = datetime.today()
+um_ano_atras = hoje - timedelta(days=365)
+
+data_inicio = st.date_input("Data de início:", value=um_ano_atras)
+data_fim = st.date_input("Data de fim:", value=hoje)
 
 if st.button("Consultar"):
-    # vEndPoint = 'http://localhost:8000/api/historico_preco'
-    vEndPoint = 'http://api:8000/api/historico_preco'
+    vEndPoint = 'http://localhost:8000/api/historico_preco'
+    # vEndPoint = 'http://api:8000/api/historico_preco'
     vBase = pd.DataFrame()
 
     for acao in acoes:
