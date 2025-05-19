@@ -1,0 +1,13 @@
+# Executar API - app
+
+docker build -t api .
+docker run -p 8000:8000 api
+
+# Executar API - Streamlit
+
+docker build -t streamlit .
+docker run -p 8000:8000 streamlit
+
+# Executar Docker-compose
+
+docker-compose up --build
