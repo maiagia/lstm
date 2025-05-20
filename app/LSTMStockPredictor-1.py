@@ -12,7 +12,7 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 import joblib
 
 class LSTMStockPredictor:
-    def __init__(self, symbol='DIS', start_date='2018-01-01', end_date='2024-07-20'):
+    def __init__(self, symbol, start_date, end_date):
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
