@@ -140,3 +140,17 @@ class LSTMStockPredictor:
 
     def get_metrics_df(self):
         return self.df_metricas
+
+if __name__ == "__main__":
+    predictor = LSTMStockPredictor('PETR4.SA', '2024-01-01', '2025-01-01')
+    predictor.load_data()
+    predictor.preprocess()
+    predictor.build_model()
+    predictor.train_model(epochs=20, batch_size=32)
+    predictor.evaluate_and_forecast()
+
+    df_previsoes = predictor.get_forecast_df()
+    df_metricas = predictor.get_metrics_df()
+
+    print(df_previsoes)
+    print(df_metricas)

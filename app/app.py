@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import streamlit as st
+from LSTMStockPredictor import LSTMStockPredictor
 from datetime import datetime, timedelta
 
 # Configuração da interface com Streamlit
@@ -48,18 +49,32 @@ def consultar_historico(acoes, data_inicio, data_fim):
     if not vBase.empty:
         vBase.fillna(0, inplace=True)
         vBase['Date'] = pd.to_datetime(vBase['Date'])
-    return vBase, data_inicio, data_fim
+    return acao, data_inicio, data_fim, vBase
 
 if st.button("Consultar"):
-    vBase, data_inicio, data_fim = consultar_historico(acoes, data_inicio, data_fim)
+    acao, data_inicio, data_fim, vBase = consultar_historico(acoes, data_inicio, data_fim)
 
     if not vBase.empty:
         st.dataframe(vBase)
         csv_filename = f"saida_historico_csv/historico_precos_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
         vBase.to_csv(csv_filename, index=False)
         st.success(f"Arquivo CSV exportado: {csv_filename}")
+        ####################################################################################
+        predictor = LSTMStockPredictor(acao, data_inicio, data_fim)
+        predictor.load_data()
+        predictor.preprocess()
+        predictor.build_model()
+        predictor.train_model(epochs=20, batch_size=32)
+        predictor.evaluate_and_forecast()
+
+        df_previsoes = predictor.get_forecast_df()
+        df_metricas = predictor.get_metrics_df()
+
+        print(f"df_previsoes: {df_previsoes}")
+        print(f"df_metricas: {df_metricas}")
         # Exemplo de uso das datas:
         st.write(f"Data de início usada: {data_inicio}")
         st.write(f"Data de fim usada: {data_fim}")
     else:
         st.warning("Nenhum dado retornado para os parâmetros informados.")
+
