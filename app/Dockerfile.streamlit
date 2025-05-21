@@ -8,4 +8,4 @@ COPY . /app-streamlit
 RUN pip install --upgrade pip
 RUN pip install -r /app-streamlit/requirements-streamlit.txt
 
-CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
