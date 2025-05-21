@@ -28,8 +28,8 @@ data_inicio = st.date_input("Data de início:", value=um_ano_atras)
 data_fim = st.date_input("Data de fim:", value=hoje)
 
 def consultar_historico(acoes, data_inicio, data_fim):
-    # vEndPoint = 'http://localhost:8000/api/historico_preco'
-    vEndPoint = 'http://api:8000/api/historico_preco'
+    vEndPoint = 'http://localhost:8000/api/historico_preco'
+    # vEndPoint = 'http://api:8000/api/historico_preco'
     vBase = pd.DataFrame()
 
     for acao in acoes:
@@ -52,26 +52,27 @@ def consultar_historico(acoes, data_inicio, data_fim):
     return acao, data_inicio, data_fim, vBase
 
 if st.button("Consultar"):
-    acao, data_inicio, data_fim, vBase = consultar_historico(acoes, data_inicio, data_fim)
+    symbol, start_date, end_date, df = consultar_historico(acoes, data_inicio, data_fim)
 
-    if not vBase.empty:
-        st.dataframe(vBase)
+    if not df.empty:
+        st.dataframe(df)
         csv_filename = f"saida_historico_csv/historico_precos_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
-        vBase.to_csv(csv_filename, index=False)
+        df.to_csv(csv_filename, index=False)
         st.success(f"Arquivo CSV exportado: {csv_filename}")
         ####################################################################################
-        predictor = LSTMStockPredictor(acao, data_inicio, data_fim)
-        predictor.load_data()
+        predictor = LSTMStockPredictor(symbol, start_date, end_date, df)
+
+        # predictor.load_data()
         predictor.preprocess()
         predictor.build_model()
-        predictor.train_model(epochs=20, batch_size=32)
+        predictor.train_model(epochs=20, batch_size=32, save=True)
         predictor.evaluate_and_forecast()
+        predictor.plot_results()
 
-        df_previsoes = predictor.get_forecast_df()
-        df_metricas = predictor.get_metrics_df()
-
-        print(f"df_previsoes: {df_previsoes}")
-        print(f"df_metricas: {df_metricas}")
+        print("Métricas de avaliação:")
+        print(predictor.get_metrics_df())
+        print("\nPrevisão para os próximos 7 dias:")
+        print(predictor.get_forecast_df())
         # Exemplo de uso das datas:
         st.write(f"Data de início usada: {data_inicio}")
         st.write(f"Data de fim usada: {data_fim}")

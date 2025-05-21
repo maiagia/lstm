@@ -12,10 +12,12 @@ from keras.layers import LSTM, Dense, Dropout, Input
 import joblib
 
 class LSTMStockPredictor:
+    # def __init__(self, symbol, start_date, end_date, df):
     def __init__(self, symbol, start_date, end_date):
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
+        # self.df = df
         self.df = None
         self.scaler = MinMaxScaler()
         self.model = None
@@ -30,6 +32,7 @@ class LSTMStockPredictor:
     def load_data(self):
         df = yf.download(self.symbol, start=self.start_date, end=self.end_date)
         self.df = df[['Close']]
+        return self.df
 
     def preprocess(self):
         df_scaled = self.scaler.fit_transform(self.df)
@@ -149,14 +152,16 @@ if __name__ == "__main__":
 
     predictor = LSTMStockPredictor(symbol, start_date, end_date)
 
-    predictor.load_data()
+    df = predictor.load_data()
     predictor.preprocess()
     predictor.build_model()
     predictor.train_model(epochs=20, batch_size=32, save=True)
     predictor.evaluate_and_forecast()
-    predictor.plot_results()
+    # predictor.plot_results()
 
     print("Métricas de avaliação:")
     print(predictor.get_metrics_df())
     print("\nPrevisão para os próximos 7 dias:")
     print(predictor.get_forecast_df())
+    print("\nDataFrame:")
+    print(predictor.load_data().to_string(max_rows=20))
