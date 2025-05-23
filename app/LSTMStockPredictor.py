@@ -137,7 +137,6 @@ if __name__ == "__main__":
     predictor.build_model()
     predictor.train_model(epochs=20, batch_size=32, save=True)
     predictor.evaluate_and_forecast()
-    # predictor.plot_results()
 
     print("Métricas de avaliação:")
     print(predictor.get_metrics_df())
