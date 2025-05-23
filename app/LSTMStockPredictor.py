@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 import yfinance as yf
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from datetime import timedelta
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -12,11 +10,13 @@ from keras.layers import LSTM, Dense, Dropout, Input
 import joblib
 
 class LSTMStockPredictor:
-    def __init__(self, symbol, start_date, end_date):
+    def __init__(self, symbol, start_date, end_date, df):
         self.symbol = symbol
         self.start_date = start_date
         self.end_date = end_date
-        self.df = None
+
+        self.df = df
+
         self.scaler = MinMaxScaler()
         self.model = None
         self.X_train = self.X_test = self.y_train = self.y_test = None
@@ -30,9 +30,12 @@ class LSTMStockPredictor:
     def load_data(self):
         df = yf.download(self.symbol, start=self.start_date, end=self.end_date)
         self.df = df[['Close']]
+        return self.df
 
     def preprocess(self):
-        df_scaled = self.scaler.fit_transform(self.df)
+        close_values = self.df[['Close']].values  
+        self.scaler = MinMaxScaler(feature_range=(0, 1))
+        df_scaled = self.scaler.fit_transform(close_values)
 
         X, y = [], []
         for i in range(self.time_steps, len(df_scaled)):
@@ -82,7 +85,7 @@ class LSTMStockPredictor:
         self.y_pred_inv = self.scaler.inverse_transform(y_pred)
 
         # Previsão futura (7 dias)
-        last_sequence = self.scaler.transform(self.df)[-self.time_steps:].reshape(1, self.time_steps, 1)
+        last_sequence = self.scaler.transform(self.df[['Close']])[-self.time_steps:].reshape(1, self.time_steps, 1)
         future_predictions = []
 
         for _ in range(7):
@@ -94,8 +97,8 @@ class LSTMStockPredictor:
             np.array(future_predictions).reshape(-1, 1)
         )
 
-        datas_teste = self.df.index[self.time_steps + int(len(self.df) * 0.8):]
-        self.datas_futuros = [datas_teste[-1] + timedelta(days=i + 1) for i in range(7)]
+        last_date = pd.to_datetime(self.df['Date'].iloc[-1])
+        self.datas_futuros = [last_date + timedelta(days=i + 1) for i in range(7)]
 
         self.df_previsoes_futuras = pd.DataFrame({
             "Data": self.datas_futuros,
@@ -115,26 +118,6 @@ class LSTMStockPredictor:
             "SMAPE (%)": round(smape, 2)
         }])
 
-    def plot_results(self):
-        datas = self.df.index[self.time_steps + int(len(self.df) * 0.8):]
-        datas_window = datas[-30:]
-        y_test_inv_window = self.y_test_inv[-30:]
-        y_pred_inv_window = self.y_pred_inv[-30:]
-
-        plt.figure(figsize=(14, 5))
-        plt.plot(datas_window, y_test_inv_window, label='Real')
-        plt.plot(datas_window, y_pred_inv_window, label='Previsto')
-        plt.plot(self.datas_futuros, self.future_predictions_inv, label='Previsão Futura (7 dias)', color='green')
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=3))
-        plt.title('Preço de Fechamento - Real vs Previsto')
-        plt.xlabel('Data')
-        plt.ylabel('Preço')
-        plt.legend()
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
-
     def get_forecast_df(self):
         return self.df_previsoes_futuras
 
@@ -149,14 +132,16 @@ if __name__ == "__main__":
 
     predictor = LSTMStockPredictor(symbol, start_date, end_date)
 
-    predictor.load_data()
+    df = predictor.load_data()
     predictor.preprocess()
     predictor.build_model()
     predictor.train_model(epochs=20, batch_size=32, save=True)
     predictor.evaluate_and_forecast()
-    predictor.plot_results()
+    # predictor.plot_results()
 
     print("Métricas de avaliação:")
     print(predictor.get_metrics_df())
     print("\nPrevisão para os próximos 7 dias:")
     print(predictor.get_forecast_df())
+    print("\nDataFrame:")
+    print(predictor.load_data().to_string(max_rows=20))
