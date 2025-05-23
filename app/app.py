@@ -112,10 +112,8 @@ if st.button("Consultar"):
             st.subheader(f"Histórico e Previsão dos Próximos 7 Dias para {acao}")
             fig, ax = plt.subplots()
 
-            # Plota o histórico normalmente
             ax.plot(df['Date'], df['Close'], label='Histórico', color='blue')
 
-            # Plota a previsão a partir do último ponto do histórico, sem marcador
             previsao_datas = pd.concat([pd.Series([df['Date'].iloc[-1]]), forecast_df['Data']], ignore_index=True)
             previsao_precos = pd.concat([pd.Series([df['Close'].iloc[-1]]), forecast_df['Preço Previsto']], ignore_index=True)
             ax.plot(previsao_datas, previsao_precos, label='Previsão', color='orange', linestyle='-') 
