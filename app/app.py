@@ -125,7 +125,6 @@ if st.button("Consultar"):
             plt.tight_layout()
             st.pyplot(fig)
 
-            # Botão para exportar PDF
             pdf_buffer = gerar_pdf(forecast_df, fig)
             st.download_button(
                 label="Baixar PDF com Previsão e Gráfico",
