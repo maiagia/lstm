@@ -30,8 +30,8 @@ data_fim = st.date_input("Data de fim:", value=hoje)
 
 
 def consultar_historico(acoes, data_inicio, data_fim):
-    vEndPoint = 'http://localhost:8000/api/historico_preco'
-    # vEndPoint = 'http://api:8000/api/historico_preco'
+    # vEndPoint = 'http://localhost:8000/api/historico_preco'
+    vEndPoint = 'http://api:8000/api/historico_preco'
     vBase = pd.DataFrame()
 
     for acao in acoes:
@@ -59,8 +59,6 @@ def consultar_historico(acoes, data_inicio, data_fim):
 if st.button("Consultar"):
     with st.spinner("Consultando e processando os dados, por favor aguarde..."):
         symbol, start_date, end_date, df = consultar_historico([acao], data_inicio, data_fim)
-        print("\nDataFrame:")
-        print(df.to_string(max_rows=20))
 
         if not df.empty:
             predictor = LSTMStockPredictor(symbol, start_date, end_date, df)
