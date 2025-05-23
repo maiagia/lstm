@@ -4,6 +4,9 @@ import streamlit as st
 from LSTMStockPredictor import LSTMStockPredictor
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+from fpdf import FPDF
+import io
+import tempfile
 
 
 # Configuração da interface com Streamlit
@@ -28,10 +31,36 @@ um_ano_atras = hoje - timedelta(days=365)
 data_inicio = st.date_input("Data de início:", value=um_ano_atras)
 data_fim = st.date_input("Data de fim:", value=hoje)
 
+def gerar_pdf(tabela_df, fig):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt="Tabela de Previsões dos Próximos 7 Dias", ln=True, align='C')
+
+    col_width = pdf.w / (len(tabela_df.columns) + 1)
+    pdf.set_font("Arial", size=10)
+    for col in tabela_df.columns:
+        pdf.cell(col_width, 10, col, border=1)
+    pdf.ln()
+    for i, row in tabela_df.iterrows():
+        for item in row:
+            pdf.cell(col_width, 10, str(item), border=1)
+        pdf.ln()
+
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmpfile:
+        fig.savefig(tmpfile.name, format="png")
+        tmpfile.flush()
+        pdf.image(tmpfile.name, x=10, y=pdf.get_y()+10, w=180)
+
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    pdf_buffer = io.BytesIO(pdf_bytes)
+    pdf_buffer.seek(0)
+    return pdf_buffer
+
 
 def consultar_historico(acoes, data_inicio, data_fim):
-    # vEndPoint = 'http://localhost:8000/api/historico_preco'
-    vEndPoint = 'http://api:8000/api/historico_preco'
+    vEndPoint = 'http://localhost:8000/api/historico_preco'
+    # vEndPoint = 'http://api:8000/api/historico_preco'
     vBase = pd.DataFrame()
 
     for acao in acoes:
@@ -56,6 +85,7 @@ def consultar_historico(acoes, data_inicio, data_fim):
         vBase = vBase.reset_index(drop=True) 
     return acoes, data_inicio, data_fim, vBase
 
+
 if st.button("Consultar"):
     with st.spinner("Consultando e processando os dados, por favor aguarde..."):
         symbol, start_date, end_date, df = consultar_historico([acao], data_inicio, data_fim)
@@ -68,20 +98,18 @@ if st.button("Consultar"):
             predictor.train_model(epochs=20, batch_size=32, save=True)
             predictor.evaluate_and_forecast()
         
-            # Exibir métricas de avaliação em formato expansível
-            with st.expander("Métricas de Avaliação"):
+            with st.expander(f"Métricas de Avaliação para {acao}", expanded=True):
                 metrics_df = predictor.get_metrics_df()
                 st.table(metrics_df)
 
             forecast_df = predictor.get_forecast_df()
-            forecast_df['Data'] = pd.to_datetime(forecast_df['Data'])
+            forecast_df['Data'] = pd.to_datetime(forecast_df['Data']).dt.strftime('%Y-%m-%d')
             df['Date'] = pd.to_datetime(df['Date'])
 
-            # Exibe a tabela de previsões antes do gráfico
-            st.subheader("Tabela de Previsões dos Próximos 7 Dias")
+            st.subheader(f"Tabela de Previsões dos Próximos 7 Dias para {acao}")
             st.table(forecast_df)
 
-            st.subheader("Histórico e Previsão dos Próximos 7 Dias")
+            st.subheader(f"Histórico e Previsão dos Próximos 7 Dias para {acao}")
             fig, ax = plt.subplots()
 
             # Plota o histórico normalmente
@@ -98,6 +126,15 @@ if st.button("Consultar"):
             plt.xticks(rotation=45)
             plt.tight_layout()
             st.pyplot(fig)
+
+            # Botão para exportar PDF
+            pdf_buffer = gerar_pdf(forecast_df, fig)
+            st.download_button(
+                label="Baixar PDF com Previsão e Gráfico",
+                data=pdf_buffer,
+                file_name=f"previsao_acao_{acao}.pdf",
+                mime="application/pdf"
+            )
         else:
             st.warning("Nenhum dado retornado para os parâmetros informados.")
 
