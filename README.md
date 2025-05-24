@@ -3,6 +3,9 @@
 Este projeto é o desafio da Fase 4 do MBA em Machine Learning da FIAP. Ele tem como objetivo aplicar técnicas de Deep Learning — em especial, redes LSTM — para prever preços de ações da bolsa de valores com base em séries temporais. A aplicação final entrega uma API RESTful e uma interface interativa em Streamlit para interação com o modelo.
 
 ---
+👨‍💻 Equipe
+
+Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ## 🚀 Visão Geral
 
@@ -52,22 +55,21 @@ Este projeto é o desafio da Fase 4 do MBA em Machine Learning da FIAP. Ele tem 
 ## 📁 Estrutura do Projeto
 
 ├── api/ # API FastAPI
-│ ├── main.py # Inicialização e roteamento
-│ ├── rotas/ # Endpoints da API
-│ ├── modelos/ # Modelos Pydantic para validação
-│ ├── servicos/ # Lógica de negócio e integração
-│ └── Dockerfile.api # Dockerfile da API
+│   ├── main.py # Inicialização e roteamento
+│   ├── rotas/ # Endpoints da API
+│   ├── modelos/ # Modelos Pydantic para validação
+│   ├── servicos/ # Lógica de negócio e integração
+│   └── Dockerfile.api # Dockerfile da API
 │
 ├── app/ # Interface Streamlit
-│ ├── app.py # Interface gráfica
-│ ├── LSTMStockPredictor.py # Classe de treinamento/predição
-│ └── Dockerfile.streamlit
+│   ├── app.py # Interface gráfica
+│   ├── LSTMStockPredictor.py # Classe de treinamento/predição
+│   └── Dockerfile.streamlit
 │
 ├── docker-compose.yml # Orquestração dos containers
 ├── modelo_lstm.h5 # Modelo treinado
 ├── scaler.pkl # Scaler salvo
 └── requirements-*.txt # Dependências
-
 
 ---
 
@@ -91,22 +93,55 @@ Acessar:
 POST /api/historico_preco
 Solicita o histórico de preços de uma ação via yFinance.
 
-Exemplo:
+Exemplo de requisição JSON:
 
+json
+Copiar
+Editar
 {
   "acao": "PETR4.SA",
   "data_inicio": "2023-01-01",
   "data_fim": "2024-01-01"
 }
-
 POST /api/predict
 Recebe uma lista de preços anteriores e retorna a previsão para o próximo dia.
 
-Exemplo:
+Exemplo de requisição JSON:
 
+json
+Copiar
+Editar
 {
   "precos_anteriores": [28.34, 28.55, 28.42, ..., 30.15]
 }
+🎨 Interface Streamlit
+Permite ao usuário selecionar uma ação e o intervalo de tempo.
+
+Exibe métricas do modelo.
+
+Mostra gráfico comparando histórico real com a previsão.
+
+Gera relatório em PDF com tabela + gráfico.
+
+📦 Requisitos
+Instalados automaticamente via requirements-api.txt e requirements-streamlit.txt durante o build do Docker.
+
+Principais pacotes:
+
+fastapi, uvicorn
+
+tensorflow, scikit-learn, yfinance, pandas, numpy
+
+streamlit, fpdf, matplotlib
 
 
+🎥 Entregáveis
+✅ Código-fonte completo com README.
 
+✅ Containers Docker prontos para deploy.
+
+✅ API RESTful funcional.
+
+✅ Interface Streamlit interativa.
+
+✅ Geração de PDF com previsões.
