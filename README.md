@@ -51,3 +51,62 @@ Este projeto é o desafio da Fase 4 do MBA em Machine Learning da FIAP. Ele tem 
 
 ## 📁 Estrutura do Projeto
 
+├── api/ # API FastAPI
+│ ├── main.py # Inicialização e roteamento
+│ ├── rotas/ # Endpoints da API
+│ ├── modelos/ # Modelos Pydantic para validação
+│ ├── servicos/ # Lógica de negócio e integração
+│ └── Dockerfile.api # Dockerfile da API
+│
+├── app/ # Interface Streamlit
+│ ├── app.py # Interface gráfica
+│ ├── LSTMStockPredictor.py # Classe de treinamento/predição
+│ └── Dockerfile.streamlit
+│
+├── docker-compose.yml # Orquestração dos containers
+├── modelo_lstm.h5 # Modelo treinado
+├── scaler.pkl # Scaler salvo
+└── requirements-*.txt # Dependências
+
+
+---
+
+## 🧪 Como Executar o Projeto
+
+### Pré-requisitos
+
+- Docker e Docker Compose instalados.
+
+### Executar com Docker
+
+```bash
+docker-compose up --build
+
+Acessar:
+📊 Streamlit: http://localhost:8501
+
+🔗 API Swagger (FastAPI): http://localhost:8000/docs
+
+🔌 Endpoints da API
+POST /api/historico_preco
+Solicita o histórico de preços de uma ação via yFinance.
+
+Exemplo:
+
+{
+  "acao": "PETR4.SA",
+  "data_inicio": "2023-01-01",
+  "data_fim": "2024-01-01"
+}
+
+POST /api/predict
+Recebe uma lista de preços anteriores e retorna a previsão para o próximo dia.
+
+Exemplo:
+
+{
+  "precos_anteriores": [28.34, 28.55, 28.42, ..., 30.15]
+}
+
+
+
