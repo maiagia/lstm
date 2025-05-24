@@ -67,6 +67,7 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ```bash
 docker-compose up --build
+```
 
 Acessar:
 📊 Streamlit: http://localhost:8501
@@ -98,6 +99,7 @@ Editar
 {
   "precos_anteriores": [28.34, 28.55, 28.42, ..., 30.15]
 }
+
 🎨 Interface Streamlit
 Permite ao usuário selecionar uma ação e o intervalo de tempo.
 
@@ -109,14 +111,6 @@ Gera relatório em PDF com tabela + gráfico.
 
 📦 Requisitos
 Instalados automaticamente via requirements-api.txt e requirements-streamlit.txt durante o build do Docker.
-
-Principais pacotes:
-
-fastapi, uvicorn
-
-tensorflow, scikit-learn, yfinance, pandas, numpy
-
-streamlit, fpdf, matplotlib
 
 
 🎥 Entregáveis
