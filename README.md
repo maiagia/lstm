@@ -70,7 +70,6 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 ├── modelo_lstm.h5 # Modelo treinado
 ├── scaler.pkl # Scaler salvo
 └── requirements-*.txt # Dependências
-
 ---
 
 ## 🧪 Como Executar o Projeto
