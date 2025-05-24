@@ -92,6 +92,7 @@ Acessar:
 🔗 API Swagger (FastAPI): http://localhost:8000/docs
 
 🔌 Endpoints da API
+
 POST /api/historico_preco
 Solicita o histórico de preços de uma ação via yFinance.
 
