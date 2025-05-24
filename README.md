@@ -54,7 +54,24 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ## 📁 Estrutura do Projeto
 
-![image](https://github.com/user-attachments/assets/0c3b9371-485d-43a5-a426-9eae69f856f2)
+```plaintext
+├── api/ # API FastAPI  
+│   ├── main.py # Inicialização e roteamento  
+│   ├── rotas/ # Endpoints da API  
+│   ├── modelos/ # Modelos Pydantic para validação  
+│   ├── servicos/ # Lógica de negócio e integração  
+│   └── Dockerfile.api # Dockerfile da API  
+│  
+├── app/ # Interface Streamlit  
+│   ├── app.py # Interface gráfica  
+│   ├── LSTMStockPredictor.py # Classe de treinamento/predição  
+│   └── Dockerfile.streamlit  
+│  
+├── docker-compose.yml # Orquestração dos containers  
+├── modelo_lstm.h5 # Modelo treinado  
+├── scaler.pkl # Scaler salvo  
+└── requirements-*.txt # Dependências  
+```
 
 
 ## 🧪 Como Executar o Projeto
@@ -78,27 +95,8 @@ Acessar:
 POST /api/historico_preco
 Solicita o histórico de preços de uma ação via yFinance.
 
-Exemplo de requisição JSON:
-
-json
-Copiar
-Editar
-{
-  "acao": "PETR4.SA",
-  "data_inicio": "2023-01-01",
-  "data_fim": "2024-01-01"
-}
 POST /api/predict
 Recebe uma lista de preços anteriores e retorna a previsão para o próximo dia.
-
-Exemplo de requisição JSON:
-
-json
-Copiar
-Editar
-{
-  "precos_anteriores": [28.34, 28.55, 28.42, ..., 30.15]
-}
 
 🎨 Interface Streamlit
 Permite ao usuário selecionar uma ação e o intervalo de tempo.
