@@ -1,53 +1,52 @@
-# Projeto de Previsão de Preços de Ações com LSTM
+# 📈 Previsão de Preços de Ações com LSTM
 
-Este projeto implementa uma solução completa de Deep Learning para previsão de preços de fechamento de ações, utilizando redes neurais LSTM. O pipeline inclui coleta de dados, modelagem, criação de API RESTful com FastAPI e deploy com Docker.
-
-## 📊 Visão Geral
-
-> ℹ️ **Nota Importante:** Embora o modelo contenha um método `load_data()` com `yfinance`, ele foi adaptado para aceitar um `DataFrame` diretamente — geralmente fornecido por uma **API interna**. Isso garante que a predição ocorra com dados controlados e atualizados por chamadas autenticadas, em vez de depender da coleta ao vivo via `yfinance` durante a inferência.
-
-A solução desenvolvida utiliza dados históricos de ações para treinar um modelo LSTM (Long Short Term Memory) capaz de prever os próximos valores de fechamento com base nos dados anteriores.
-
-## 🧠 Tecnologias Utilizadas
-
-- Python
-- Pandas, NumPy, Scikit-learn
-- TensorFlow / Keras
-- FastAPI (API RESTful)
-- Streamlit (Interface visual)
-- Docker & Docker Compose
+Este projeto é o desafio da Fase 4 do MBA em Machine Learning da FIAP. Ele tem como objetivo aplicar técnicas de Deep Learning — em especial, redes LSTM — para prever preços de ações da bolsa de valores com base em séries temporais. A aplicação final entrega uma API RESTful e uma interface interativa em Streamlit para interação com o modelo.
 
 ---
 
-## ✅ Requisitos Atendidos
+## 🚀 Visão Geral
+
+- Coleta dados históricos da B3 via API customizada integrada com yFinance.
+- Treina um modelo LSTM para prever o fechamento de ações.
+- Disponibiliza endpoints RESTful para previsão e consulta de histórico.
+- Cria uma interface visual com Streamlit.
+- Utiliza Docker para facilitar o deploy e a escalabilidade da solução.
+
+---
+
+## ✅ Requisitos do Desafio e Como Foram Atendidos
 
 ### 1. Coleta e Pré-processamento dos Dados
-- Coleta inicial dos dados realizada com a biblioteca `yfinance` durante a fase de treinamento.
-- Dados históricos são processados e normalizados com `MinMaxScaler`.
-- Para **predições**, os dados **são enviados pelo cliente via API** (`POST /prever`) e não coletados diretamente pelo backend via yfinance.
-- Também há rota para atualizar a base via API (`POST /carregar-dados`).
+
+- ✔️ Utilização da biblioteca `yfinance` para baixar dados históricos de ações diretamente na API, através do endpoint `/api/historico_preco`.
+- ✔️ Interface Streamlit permite que o usuário defina a ação e o intervalo de datas.
+- ✔️ Os dados são transformados e normalizados com `MinMaxScaler`.
 
 ### 2. Desenvolvimento do Modelo LSTM
-- Rede LSTM construída com Keras e TensorFlow.
-- Treinamento com dados históricos com janela deslizante de 30 dias.
-- Avaliação com métricas como MAE, MAPE, RMSE e SMAPE.
-- Ajustes de hiperparâmetros para desempenho otimizado.
+
+- ✔️ Modelo LSTM construído com Keras e TensorFlow com duas camadas LSTM e camadas de Dropout.
+- ✔️ O modelo é treinado com dados históricos passados pela API.
+- ✔️ Métricas de avaliação implementadas: MAE, MAPE, RMSE e SMAPE.
+- ✔️ Avaliação e predição para os próximos 7 dias são exibidas com gráfico e tabela.
 
 ### 3. Salvamento e Exportação do Modelo
-- Modelo salvo em formato `.h5` (`modelo_lstm.h5`).
-- Scaler salvo como `.pkl` (`scaler.pkl`) para reuso no processo de normalização durante inferência.
+
+- ✔️ Após o treinamento, o modelo é salvo no formato `.h5` e o scaler como `.pkl` usando `joblib`.
+- ✔️ Isso permite reutilizar o modelo treinado para inferências futuras sem retraining.
 
 ### 4. Deploy do Modelo
-- API RESTful criada com **FastAPI**.
-- Endpoints:
-  - `POST /prever`: recebe histórico via JSON e retorna previsão.
-  - `POST /carregar-dados`: coleta novos dados do Yahoo Finance e atualiza base interna.
-- Interface adicional desenvolvida com **Streamlit** para facilitar uso do modelo via navegador.
+
+- ✔️ API criada com FastAPI com endpoints:
+  - `/api/historico_preco`: retorna dados históricos via yFinance.
+  - `/api/predict`: recebe uma lista de preços e retorna a previsão.
+- ✔️ Interface Streamlit comunica com a API para orquestrar toda a operação.
+- ✔️ Geração de relatórios em PDF com tabela e gráfico de previsões.
 
 ### 5. Escalabilidade e Monitoramento
-- Deploy em múltiplos containers com Docker.
-- `docker-compose.yml` define a arquitetura completa: API + Frontend.
-- Logs e modularização da API facilitam futura instrumentação com Prometheus, Grafana, etc.
+
+- ✔️ Deploy Dockerizado com dois containers: um para API (FastAPI) e outro para Frontend (Streamlit).
+- ✔️ Comunicação entre serviços via `docker-compose` com rede interna isolada.
+- ⚠️ Monitoramento em produção ainda pode ser aprimorado com ferramentas como Prometheus ou Grafana.
 
 ---
 
