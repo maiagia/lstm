@@ -91,7 +91,7 @@ Acessar:
 
 🔗 API Swagger (FastAPI): http://localhost:8000/docs
 
-🔌 Endpoints da API
+##🔌 Endpoints da API
 
 POST /api/historico_preco
 Solicita o histórico de preços de uma ação via yFinance.
@@ -99,7 +99,7 @@ Solicita o histórico de preços de uma ação via yFinance.
 POST /api/predict
 Recebe uma lista de preços anteriores e retorna a previsão para o próximo dia.
 
-🎨 Interface Streamlit
+## 🎨 Interface Streamlit
 Permite ao usuário selecionar uma ação e o intervalo de tempo.
 
 Exibe métricas do modelo.
@@ -108,11 +108,12 @@ Mostra gráfico comparando histórico real com a previsão.
 
 Gera relatório em PDF com tabela + gráfico.
 
-📦 Requisitos
+## 📦 Requisitos
 Instalados automaticamente via requirements-api.txt e requirements-streamlit.txt durante o build do Docker.
 
 
-🎥 Entregáveis
+## 🎥 Entregáveis
+
 ✅ Código-fonte completo com README.
 
 ✅ Containers Docker prontos para deploy.
