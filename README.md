@@ -9,6 +9,7 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ## 🚀 Visão Geral
 
+
 - Coleta dados históricos da B3 via API customizada integrada com yFinance.
 - Treina um modelo LSTM para prever o fechamento de ações.
 - Disponibiliza endpoints RESTful para previsão e consulta de histórico.
