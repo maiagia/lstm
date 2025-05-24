@@ -54,23 +54,8 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ## 📁 Estrutura do Projeto
 
-├── api/ # API FastAPI
-│   ├── main.py # Inicialização e roteamento
-│   ├── rotas/ # Endpoints da API
-│   ├── modelos/ # Modelos Pydantic para validação
-│   ├── servicos/ # Lógica de negócio e integração
-│   └── Dockerfile.api # Dockerfile da API
-│
-├── app/ # Interface Streamlit
-│   ├── app.py # Interface gráfica
-│   ├── LSTMStockPredictor.py # Classe de treinamento/predição
-│   └── Dockerfile.streamlit
-│
-├── docker-compose.yml # Orquestração dos containers
-├── modelo_lstm.h5 # Modelo treinado
-├── scaler.pkl # Scaler salvo
-└── requirements-*.txt # Dependências
----
+![image](https://github.com/user-attachments/assets/0c3b9371-485d-43a5-a426-9eae69f856f2)
+
 
 ## 🧪 Como Executar o Projeto
 
