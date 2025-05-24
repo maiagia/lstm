@@ -46,7 +46,6 @@ Este projeto é o desafio da Fase 4 do MBA em Machine Learning da FIAP. Ele tem 
 
 - ✔️ Deploy Dockerizado com dois containers: um para API (FastAPI) e outro para Frontend (Streamlit).
 - ✔️ Comunicação entre serviços via `docker-compose` com rede interna isolada.
-- ⚠️ Monitoramento em produção ainda pode ser aprimorado com ferramentas como Prometheus ou Grafana.
 
 ---
 
