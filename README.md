@@ -9,6 +9,7 @@ Kleryton de Souza, Lucas Paim, Maiara Giavoni, Rafael Tafelli
 
 ## 🚀 Visão Geral
 
+Video disponivel em : https://github.com/maiagia/lstm/blob/main/modelo.mp4 
 
 - Coleta dados históricos da B3 via API customizada integrada com yFinance.
 - Treina um modelo LSTM para prever o fechamento de ações.
